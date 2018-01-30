@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ajax Contact Form with Google reCaptcha</title>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <!-- Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="contactformstyle.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+    <div class="container">
+        <h3 class="well">Ajax Contact Form with Google reCaptcha</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <form id="contactform" method="post" action="mailer.php">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="username" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" placeholder="Enter your email message"></textarea>
+                    </div>
+
+                    <br>
+                    <div class="g-recaptcha" data-sitekey="RECAPTCHA_SITE_KEY"></div>
+                    <br>
+
+                    <div id="formresult">
+
+                    </div>
+
+                    <button type="submit" name="submit" class="btn btn-info">Submit</button>
+                    <button type="reset" class="btn btn-danger">Reset</button>
+                </form>
+            </div>
+
+            <div class="col-sm-6">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $('#contactform').submit(function(event) {
+            event.preventDefault();
+
+            var contactform = $('#contactform');
+            var formresult = $('#formresult');
+            var formdata = $(contactform).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: $(contactform).attr('action'),
+                data: formdata,
+
+                beforeSend: function() {
+                    $(formresult).removeClass();
+                    $(formresult).addClass('alert alert-info');
+                    $(formresult).html("<span class='glyphicon glyphicon-refresh gly-spin' aria-hidden='true'></span>");
+                },
+                success:function(response) {
+                    $(formresult).removeClass();
+                    $(formresult).addClass('alert alert-success');
+                    $(formresult).html(response);
+                },
+                error:function(data) {
+                    $(formresult).removeClass();
+                    $(formresult).addClass('alert alert-warning');
+                    $(formresult).html(data.responseText);
+                }
+            });
+
+        });
+
+
+    });
+    </script>
+
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>
